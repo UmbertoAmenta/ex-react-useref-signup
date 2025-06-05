@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function App() {
   const [fullName, setFullName] = useState("");
@@ -7,6 +7,30 @@ export default function App() {
   const [specialization, setSpecialization] = useState("");
   const [yearOfExp, setYearsOfExp] = useState(0);
   const [description, setDescription] = useState("");
+
+  const letters = "abcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  const symbols = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/`~";
+
+  const isUsernameValid = useMemo(() => {
+    const characters = username
+      .split("")
+      .every((c) => letters.includes(c.toLowerCase()) || numbers.includes(c));
+    return characters && username.trim().length >= 6;
+  }, [username]);
+
+  const isPasswordValid = useMemo(() => {
+    const areLetters = password
+      .split("")
+      .some((l) => letters.includes(l.toLowerCase()));
+    const areNumbers = password.split("").some((n) => numbers.includes(n));
+    const areSymbols = password.split("").some((s) => symbols.includes(s));
+    return password.length >= 8 && areLetters && areNumbers && areSymbols;
+  }, [password]);
+
+  const isDescriptionValid = useMemo(() => {
+    return description.trim().length >= 100 && description.trim().length < 1000;
+  }, [description]);
 
   function subForm(e) {
     e.preventDefault();
@@ -18,13 +42,16 @@ export default function App() {
       !specialization ||
       !description.trim() ||
       isNaN(yearOfExp) ||
-      Number(yearOfExp) <= 0
+      Number(yearOfExp) <= 0 ||
+      !isUsernameValid ||
+      !isPasswordValid ||
+      !isDescriptionValid
     ) {
       alert("Compila tutti i campi correttamente!");
       return;
     }
 
-    console.log({
+    console.log("Utente registrato:", {
       name: fullName,
       username: username,
       password: password,
@@ -61,6 +88,13 @@ export default function App() {
             placeholder="..."
             required
           />
+          {username.length > 0 && (
+            <span style={{ color: isUsernameValid ? "green" : "red" }}>
+              {isUsernameValid
+                ? "Username valido"
+                : "Minimo 6 caratteri. Solo lettere e numeri."}
+            </span>
+          )}
         </div>
 
         <div>
@@ -73,6 +107,13 @@ export default function App() {
             placeholder="***"
             required
           />
+          {password.length > 0 && (
+            <span style={{ color: isPasswordValid ? "green" : "red" }}>
+              {isPasswordValid
+                ? "Password valida"
+                : "Minimo 8 caratteri. Almeno: 1 lettera, 1 numero, 1 simbolo"}
+            </span>
+          )}
         </div>
 
         <div>
@@ -112,7 +153,14 @@ export default function App() {
             placeholder="..."
             rows="5"
             required
-          ></textarea>
+          />
+          {description.length > 0 && (
+            <span style={{ color: isDescriptionValid ? "green" : "red" }}>
+              {isDescriptionValid
+                ? "Descrizione valida"
+                : "Minimo 100, massimo 1000 caratteri (senza spazi iniziali/finali)"}
+            </span>
+          )}
         </div>
 
         <button type="submit">Invia</button>
