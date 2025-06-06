@@ -6,6 +6,18 @@
 
 /* FORM */
 form {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  min-width: 200px;
+  max-width: 30%;
+  text-align: center;
+
+  :first-child {
+    text-align: center;
+  }
+
   > :not(:last-child) {
     margin-bottom: 15px;
   }
@@ -13,8 +25,10 @@ form {
   > div {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    > input {
+    /* align-items: center; */
+
+    > input,
+    select {
       text-align: center;
     }
   }

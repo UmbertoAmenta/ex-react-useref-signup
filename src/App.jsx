@@ -1,11 +1,14 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 export default function App() {
-  const [fullName, setFullName] = useState("");
+  // const [fullName, setFullName] = useState("Mario Rossi");
+  const fullName = useRef();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [specialization, setSpecialization] = useState("");
-  const [yearOfExp, setYearsOfExp] = useState(0);
+  const specialization = useRef("");
+  // const [specialization, setSpecialization] = useState("Frontend");
+  const yearsOfExp = useRef(0);
+  // const [yearsOfExp, setYearsOfExp] = useState(1);
   const [description, setDescription] = useState("");
 
   const letters = "abcdefghijklmnopqrstuvwxyz";
@@ -36,13 +39,13 @@ export default function App() {
     e.preventDefault();
 
     if (
-      !fullName.trim() ||
+      !fullName.current.value.trim() ||
       !username.trim() ||
       !password.trim() ||
-      !specialization ||
+      !specialization.current.value ||
       !description.trim() ||
-      isNaN(yearOfExp) ||
-      Number(yearOfExp) <= 0 ||
+      isNaN(Number(yearsOfExp.current.value)) ||
+      Number(yearsOfExp.current.value) <= 0 ||
       !isUsernameValid ||
       !isPasswordValid ||
       !isDescriptionValid
@@ -52,11 +55,11 @@ export default function App() {
     }
 
     console.log("Utente registrato:", {
-      name: fullName,
+      name: fullName.current.value,
       username: username,
       password: password,
-      specializzazione: specialization,
-      anniDiEsperienza: yearOfExp,
+      specializzazione: specialization.current.value,
+      anniDiEsperienza: Number(yearsOfExp.current.value),
       descrizione: description,
     });
   }
@@ -64,13 +67,15 @@ export default function App() {
   return (
     <>
       <form onSubmit={subForm}>
-        <h4>Compila il form di registrazione, tutti i dati sono obbligatori</h4>
+        <h3>Compila il form di registrazione, tutti i dati sono obbligatori</h3>
 
         <div>
           <label htmlFor="name">Nome Cognome</label>
           <input
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            ref={fullName}
+            // defaultValue={fullName.current}
+            // value={fullName}
+            // onChange={(e) => setFullName(e.target.value)}
             type="text"
             id="name"
             placeholder="..."
@@ -120,8 +125,10 @@ export default function App() {
           <label htmlFor="specialization">Specializzazione</label>
           <select
             id="specialization"
-            value={specialization}
-            onChange={(e) => setSpecialization(e.target.value)}
+            ref={specialization}
+            // defaultValue={specialization.current}
+            // value={specialization}
+            // onChange={(e) => setSpecialization(e.target.value)}
             required
           >
             <option hidden></option>
@@ -134,8 +141,10 @@ export default function App() {
         <div>
           <label htmlFor="yearsOfExp">Anni di esperienza</label>
           <input
-            value={yearOfExp}
-            onChange={(e) => setYearsOfExp(e.target.value)}
+            ref={yearsOfExp}
+            // defaultValue={yearsOfExp.current}
+            // value={yearsOfExp}
+            // onChange={(e) => setYearsOfExp(e.target.value)}
             type="number"
             min="0"
             id="yearsOfExp"
@@ -151,7 +160,7 @@ export default function App() {
             name=""
             id=""
             placeholder="..."
-            rows="5"
+            rows="4"
             required
           />
           {description.length > 0 && (
