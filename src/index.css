@@ -33,3 +33,16 @@ form {
     }
   }
 }
+
+button {
+  cursor: pointer;
+
+  &[type="button"] {
+    background-color: unset;
+    border: none;
+    font-size: larger;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+  }
+}

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function App() {
   // const [fullName, setFullName] = useState("Mario Rossi");
@@ -10,6 +10,7 @@ export default function App() {
   const yearsOfExp = useRef(0);
   // const [yearsOfExp, setYearsOfExp] = useState(1);
   const [description, setDescription] = useState("");
+  const formSection = useRef();
 
   const letters = "abcdefghijklmnopqrstuvwxyz";
   const numbers = "0123456789";
@@ -34,6 +35,10 @@ export default function App() {
   const isDescriptionValid = useMemo(() => {
     return description.trim().length >= 100 && description.trim().length < 1000;
   }, [description]);
+
+  useEffect(() => {
+    fullName.current.focus();
+  }, []);
 
   function subForm(e) {
     e.preventDefault();
@@ -64,9 +69,22 @@ export default function App() {
     });
   }
 
+  const resetBtn = () => {
+    fullName.current.value = "";
+    setUsername("");
+    setPassword("");
+    specialization.current.value = "";
+    yearsOfExp.current.value = 0;
+    setDescription("");
+  };
+
+  const scrollUp = () => {
+    formSection.current.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <>
-      <form onSubmit={subForm}>
+      <form onSubmit={subForm} ref={formSection}>
         <h3>Compila il form di registrazione, tutti i dati sono obbligatori</h3>
 
         <div>
@@ -173,7 +191,13 @@ export default function App() {
         </div>
 
         <button type="submit">Invia</button>
+        <button type="reset" onClick={() => resetBtn()}>
+          Resetta
+        </button>
       </form>
+      <button type="button" onClick={() => scrollUp()}>
+        🔝
+      </button>
     </>
   );
 }
